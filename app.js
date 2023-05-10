@@ -9,7 +9,7 @@ let seleccion = prompt ("hola, desea comprar algun producto")
 
 
 
-while(seleccion != "si" && sleccion != "no"){
+while(seleccion != "si" && seleccion != "no"){
     alert("por favor ingresa si o no")
     seleccion = prompt("hola, desea comprar algo, si o no?") 
 }
@@ -64,5 +64,7 @@ while(seleccion != "no"){
     }
 }
 
+const total = carrito.reduce ((acc, el) => acc + el.precio * el.unidades, 0)
+console.log(`el total a pagar por su compra es: ${total}`)
 
 
