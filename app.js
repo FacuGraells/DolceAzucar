@@ -66,6 +66,10 @@ const productos = [
           precio : product.precio,
           cantidad : product.cantidad,
         });
+        console.log(carrito);
+        console.log(carrito.length);
+        carritoCounter();
+        saveLocal();
       }
         
       })
@@ -143,5 +147,7 @@ const productos = [
   
   };
   
-      
-    
+
+  const saveLocal = () => {
+  localStorage.setItem("carrito", JSON.stringify(carrito));      
+  }; 
