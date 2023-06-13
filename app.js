@@ -1,102 +1,147 @@
+const shopContent = document.getElementById("shopContent")
+
+const verCarrito = document.getElementById("verCarrito")
+
+const modalContainer = document.getElementById("modalcontainer")
 
 const productos = [
-    { nombre: "azucar", precio: 50 },
-    { nombre: "azucar mascabo", precio: 150 },
-    { nombre: "azucar organica", precio: 250 },
+    {
+      Id: 1,
+      nombre: "azucar",
+      precio: 100,
+      img: "https://empresasiansa.cl/wp-content/uploads/2020/02/azucar.jpg",
+      cantidad: 1,
+    },
+
+    {
+      Id: 2,
+      nombre: "azucar mascabo",
+      precio: 150,
+      img: "https://cdn.milenio.com/uploads/media/2021/04/08/azucar-mascabado-confundida-azucar-morena.jpg",
+      cantidad: 1,
+    },
+
+    {
+      Id: 3,
+      nombre: "azucar organica",
+      precio: 200,
+      img:  "" ,
+      cantidad: 1,
+    },
   ];
+
+  let carrito = [];
+
+  productos.forEach((product)=> {
+    let content = document.createElement("div");
+    content.className = "card";
+    content.innerHTML = `
+      <img src="${product.img}">
+      <h3>${product.nombre}</h3>
+      <p class="price">${product.precio}$</p>
+    `;
+
+    shopContent.append(content);
+
+    let comprar = document.createElement("button");
+    comprar.innerText = "comprar";
+    comprar.className = "comprar"
+
+    content.append(comprar);
+
+    comprar.addEventListener("click", () => {
+      const repeat = carrito.some((repeatProduct) => repeatProduct.id === product.id);
+      
+      if (repeat) {
+        carrito.map((prod) => {
+          if (prod.id === product.id) {
+            prod.cantidad++;
+          }
+        });
+      } else { 
+        carrito.push({
+          id : product.id,
+          img : product.img,
+          nombre : product.nombre,
+          precio : product.precio,
+          cantidad : product.cantidad,
+        });
+      }
+        
+      })
   
-  var carrito = [];
-  
-  function agregarProducto() {
-    var nombre = prompt("Ingrese el nombre del producto:");
-    var productoEncontrado = productos.find(function (producto) {
-      return producto.nombre === nombre;
     });
+    
+    //carrito
+    
+    const pintarCarrito = () => {
+    
+      modalContainer.innerHTML = "";
+      modalContainer.style.display = "flex";
+      const modalHeader = document.createElement("div");
+      modalHeader.className = "modal-header";
+      modalHeader.innerHTML = `
+        <h1 class="modal-header-title">Carrito.</h1>
+      `;
+      
+      modalContainer.append(modalHeader);
   
-    if (productoEncontrado) {
-      var cantidad = parseInt(prompt("Ingrese la cantidad del producto:"));
-      var productoExistente = carrito.find(function (producto) {
-        return producto.nombre === nombre;
+      const modalbutton = document.createElement("h1");
+      modalbutton.innerText = "X";
+      modalbutton.className = "modal-header-button";
+  
+      modalbutton.addEventListener("click", () =>{
+        modalContainer.style.display = "none"
       });
   
-      if (productoExistente) {
-        productoExistente.cantidad += cantidad;
-      } else {
-        var producto = {
-          nombre: productoEncontrado.nombre,
-          precio: productoEncontrado.precio,
-          cantidad: cantidad,
-        };
-        carrito.push(producto);
-      }
+      modalHeader.append(modalbutton);
+      
   
-      alert("¡Producto agregado al carrito de compras!");
-    } else {
-      alert("Producto no encontrado en la lista de productos.");
-    }
-  }
-  function eliminarProducto() {
-    var nombre = prompt("Ingrese el nombre del producto a eliminar:");
+      carrito.forEach((product) =>{
+        
+        let carritoContent = document.createElement("div")
+        carrito.className = "modal-content";
+        carritoContent.innerHTML = `
+        <img src="${product.img}">
+        <h3>${product.nombre}</h3>
+        <p>${product.precio}</p>
+        <p>cantidad: ${product.cantidad}</p>
+        `;
   
-    var indice = -1;
-    for (var i = 0; i < carrito.length; i++) {
-      if (carrito[i].nombre === nombre) {
-        indice = i;
-        break;
-      }
-    }
+        modalContainer.append(carritoContent);
   
-    if (indice !== -1) {
-      carrito.splice(indice, 1);
-      alert("¡Producto eliminado del carrito de compras!");
-    } else {
-      alert("El producto no está en el carrito de compras.");
-    }
-  }
+        let eliminar = document.createElement("span");
+        eliminar.innerText = "❌";
+        eliminar.className = "delete-product";
+        carritoContent.append(eliminar);
   
-  function calcularTotal() {
-    var total = 0;
-    for (var i = 0; i < carrito.length; i++) {
-      total += carrito[i].precio * carrito[i].cantidad;
-    }
-    alert("Total de la compra: $" + total.toFixed(2));
-  }
+        eliminar.addEventListener("click", eliminarProducto);
   
-  function mostrarCarrito() {
-    var carritoInfo = "Carrito de compras:\n\n";
-    for (var i = 0; i < carrito.length; i++) {
-      carritoInfo +=
-        "Nombre: " + carrito[i].nombre + "\n" +
-        "Precio: $" + carrito[i].precio + "\n" +
-        "Cantidad: " + carrito[i].cantidad + "\n\n";
-    }
-    alert(carritoInfo);
-  }
+      });
   
-  while (true) {
-    var opcion = prompt(
-      "Seleccione una opción:\n" +
-      "1. Agregar producto al carrito\n" +
-      "2. Eliminar producto del carrito\n" +
-      "3. Calcular total de la compra\n" +
-      "4. Mostrar carrito de compras\n" +
-      "5. Salir"
-    );
   
-    if (opcion === "1") {
-      agregarProducto();
-    } else if (opcion === "2") {
-      eliminarProducto();
-    } 
-     else if (opcion === "3") {
-      calcularTotal();
-    } else if (opcion === "4") {
-      mostrarCarrito();
-    } else if (opcion === "5") {
-      alert("gracias por su compra! vuelva pronto!")
-      break;
-    } else {
-      alert("Opción inválida. Por favor, seleccione una opción válida.");
-    }
-  }
   
+      const total = carrito.reduce((acc, el) => acc + el.precio, 0 );
+  
+      const totalBuying = document.createElement("div");
+      totalBuying.className = "total-content";
+      totalBuying.innerHTML = `total a pagar: ${total} $`;
+      modalContainer.append(totalBuying);
+    
+  };
+  
+  verCarrito.addEventListener("click", pintarCarrito );
+  
+  const eliminarProducto = () => {
+    const foundId = carrito.find((element) => element.id);
+  
+    carrito = carrito.filter((carritoId) => {
+      return carritoId !== foundId;
+    });
+  
+    pintarCarrito();
+  
+  };
+  
+      
+    
